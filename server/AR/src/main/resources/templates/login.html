@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html xmlns:sec="http://www.thymeleaf.org">
+
+   <head>
+      <title>行为推荐系统</title>
+      <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+      <script src="lib/jquery.min.js"></script>
+     
+
+<style type="text/css">
+body{
+ margin:0;
+ padding:0;
+ background:#EDEDED
+}
+.login_logo{
+position:absolute;
+top:50%;
+left:50%;
+margin-left:-350px;
+margin-top:-185px;
+background:url(image/42.jpg) no-repeat;
+height:370px;
+width:330px; 
+}
+.login_frame{
+position:absolute;
+top:50%;
+left:50%;
+margin-left:-20px;
+margin-top:-75px;
+background:#e6e6e6;
+height:200px;
+width:330px; 
+border-radius: 6px;
+}
+.leaf{
+position:absolute;
+top:50%;
+left:50%;
+margin-left:275px;
+margin-top:-160px;
+background:url(image/leaf.png) no-repeat;
+height:64px;
+width:64px; 
+}
+.login_frame .key{
+text-align:center;
+width:100%;
+margin:0 auto;
+}
+.login_frame .key .login{
+    cursor:pointer;
+    margin-top: 15px;
+    margin-right: 10px;
+    width: 64px;
+    height: 64px;
+    float: right;
+background:url(image/login.png) no-repeat;
+border:none;
+}
+ .title{
+background:#EDEDED;
+position:absolute;
+top:50%;
+left:50%;
+margin-left:-40px;
+margin-top:-140px;
+-- background:#fff;
+width:430px; 
+height: 50px;
+background:url(image/title.png) no-repeat;
+}
+.login_frame .key input{
+padding: 1em 2em 1em 3em;
+color: #A96D39;
+ width: 80%;
+outline: medium;
+border:none;
+} 
+.login_frame .key  div{
+border:1px solid #fff;
+width:90%;
+margin:10px auto;
+border-radius: 6px;
+}
+.login_frame .key  .info{
+float:left;
+border:none;
+}
+.login_frame .text{
+    background: url(image/adm.png) no-repeat 10px 6px;
+}
+.login_frame .password{
+    background: url(image/key.png) no-repeat 10px 16px;
+}
+</style>
+   </head>
+   <body>
+<div class="login_logo"></div>
+<div class="title"> </div>
+<div class="leaf"> </div>
+<div class="login_frame">
+<div class="key">
+  <div>
+     <input id="d_user" type="text" class="text" value="duxing" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = '请输入 用户名';}" />
+  </div>
+ </div>
+ <div class="key">
+   <div>
+	<input id="d_pwd" type="password" class="password" value="duxing" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Password';}"/>
+   </div>
+ </div>
+ <div class="key">
+	<div id="login" title= "登录" class="login"></div>
+ </div>
+</div>
+<script type="text/javascript">
+var curWwwPath=window.document.location.href;	           
+var pathName=window.document.location.pathname;
+var pos=curWwwPath.indexOf(pathName);	        	
+var localhostPaht=curWwwPath.substring(0,pos);	        	  
+var projectName=pathName.substring(0,pathName.substr(1).indexOf('/')+1);
+var rootPath=localhostPaht+projectName;
+$(function(){
+	$("#login").click(function(){
+		$.ajax({
+			type : "POST",
+			url : rootPath+"/login",
+			dataType : "text",
+			data : {
+				user : $("#d_user").val(),
+				pwd : $("#d_pwd").val()
+			},
+			success : function(text) {
+				if('fail'==text){
+					alert('用户或密码错误');
+					return;
+				}
+				location.assign(rootPath + text);
+				
+			},
+			error:function(text){
+				
+			}
+		});
+	});
+	$(document).bind('keypress', function(event) {
+		if (event.keyCode == "13" ) {
+			$("#login").click();
+		}
+	   });
+});
+
+
+</script>
+      
+   </body>
+   </html>

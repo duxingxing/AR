@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <title>统一配置管理系统</title>
+      <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <script src="../lib/jquery.min.js"></script>
+    
+   </head>
+   <body>
+   <input type='button' onclick='logout()' value='退出'/>
+ <script type="text/javascript">
+ var curWwwPath=window.document.location.href;	           
+ var pathName=window.document.location.pathname;
+ var pos=curWwwPath.indexOf(pathName);	        	
+ var localhostPaht=curWwwPath.substring(0,pos);	        	  
+ var projectName=pathName.substring(0,pathName.substr(1).indexOf('/')+1);
+ var rootPath=localhostPaht+projectName;
+ function logout(){
+	 window.location.href=rootPath+'/logout';
+	 
+ }
+ function dd(s){
+	 var t=new Date();
+	 window.location.href=rootPath+'/controller/'+s+'?timetemp='+t.getTime() 
+ }
+
+ </script>
+      <a href="javascript: dd('stop');">stop</a>
+       <a href="javascript:  dd('start');">start</a>
+   </body>
