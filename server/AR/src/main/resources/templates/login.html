@@ -5,8 +5,9 @@
       <title>行为推荐系统</title>
       <meta charset="utf-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-      <script src="lib/jquery.min.js"></script>
-     
+      <script src="global/lib/jquery.min.js"></script>
+
+       <script src="global/lib/jsencrypt.min.js"></script>
 
 <style type="text/css">
 body{
@@ -20,7 +21,7 @@ top:50%;
 left:50%;
 margin-left:-350px;
 margin-top:-185px;
-background:url(image/42.jpg) no-repeat;
+background:url(global/image/42.jpg) no-repeat;
 height:370px;
 width:330px; 
 }
@@ -41,7 +42,7 @@ top:50%;
 left:50%;
 margin-left:275px;
 margin-top:-160px;
-background:url(image/leaf.png) no-repeat;
+background:url(global/image/leaf.png) no-repeat;
 height:64px;
 width:64px; 
 }
@@ -57,7 +58,7 @@ margin:0 auto;
     width: 64px;
     height: 64px;
     float: right;
-background:url(image/login.png) no-repeat;
+background:url(global/image/login.png) no-repeat;
 border:none;
 }
  .title{
@@ -70,7 +71,7 @@ margin-top:-140px;
 -- background:#fff;
 width:430px; 
 height: 50px;
-background:url(image/title.png) no-repeat;
+background:url(global/image/title.png) no-repeat;
 }
 .login_frame .key input{
 padding: 1em 2em 1em 3em;
@@ -90,10 +91,10 @@ float:left;
 border:none;
 }
 .login_frame .text{
-    background: url(image/adm.png) no-repeat 10px 6px;
+    background: url(global/image/adm.png) no-repeat 10px 6px;
 }
 .login_frame .password{
-    background: url(image/key.png) no-repeat 10px 16px;
+    background: url(global/image/key.png) no-repeat 10px 16px;
 }
 </style>
    </head>
@@ -124,13 +125,16 @@ var localhostPaht=curWwwPath.substring(0,pos);
 var projectName=pathName.substring(0,pathName.substr(1).indexOf('/')+1);
 var rootPath=localhostPaht+projectName;
 $(function(){
+ var encrypt = new JSEncrypt();
+  encrypt.setPublicKey('MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDEXz1M+BbzW+O1fixqijFMTh8lTFw0IF/b+MHFjnFumzBQNDPkxYw0Hv8GQNe3KXkimZb9iXXhS7O3ds7xDU9XOs8TRHVQuAm43kda59H6JdCPFtT+bS9fXoFuddUiahbsvtw3lmcXlLo4IDEKan3nPOGnQjexdLuJLM0dTI9NswIDAQAB');
+        var encrypted = encrypt.encrypt($("#d_user").val());//加密
 	$("#login").click(function(){
 		$.ajax({
 			type : "POST",
 			url : rootPath+"/login",
 			dataType : "text",
 			data : {
-				user : $("#d_user").val(),
+				user : encrypted,
 				pwd : $("#d_pwd").val()
 			},
 			success : function(text) {
@@ -155,6 +159,15 @@ $(function(){
 
 
 </script>
-      
+<script type="text/javascript">
+        /* demo
+        var encrypt = new JSEncrypt();
+         encrypt.setPublicKey('MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDEXz1M+BbzW+O1fixqijFMTh8lTFw0IF/b+MHFjnFumzBQNDPkxYw0Hv8GQNe3KXkimZb9iXXhS7O3ds7xDU9XOs8TRHVQuAm43kda59H6JdCPFtT+bS9fXoFuddUiahbsvtw3lmcXlLo4IDEKan3nPOGnQjexdLuJLM0dTI9NswIDAQAB');
+         var encrypted = encrypt.encrypt("dx");//加密
+            console.log(encrypted);
+         encrypt.setPrivateKey("MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBAMRfPUz4FvNb47V+LGqKMUxOHyVMXDQgX9v4wcWOcW6bMFA0M+TFjDQe/wZA17cpeSKZlv2JdeFLs7d2zvENT1c6zxNEdVC4CbjeR1rn0fol0I8W1P5tL19egW511SJqFuy+3DeWZxeUujggMQpqfec84adCN7F0u4kszR1Mj02zAgMBAAECgYEAgNuyQRinDshkkwsZoEvQb67v1yzVcEsyPAlvNfDz1E23lVm8F8nd57HTTUotg36Og7rfjr2uAcoIQ0KOJzXBsmgSOhiYk0wjSS7NmPubxQx08MXdCkgI4QzTJInOAoRdk40TcN1Gt/RDvtUtjYEG8Y5NFLQNzRY/Wf32gdP6zHkCQQDuRoY73RtzxtuGOPSQ1TA0wWq3peIitMQQN0o7bXSKwP4nvI8Kcy+KxmIemsIGYgxAX0agaXmd3I6APAOGZehFAkEA0vq/lG8D7nvfZavuDOgIkdUTvy+V+8arxeRdSTfe0GZI6gc/DxJP2YvPbcbdjYICBHPVsu3BVK5FoTxUAeNplwJBANFiyh0bHT+tdUXLESehID6L5XLC5Cipf03cuG/mrK4uEGns6io9tH6X/Kt2RaCEUs3Sq+bVKVlO8y6/Dj3xmZ0CQFBWELs5ppqZ6o/xbtzVQeYd574GJatQlDnvYiIuNxbNy/fpOHbJt0QUO7EGZ3ipx5DgdsACTnqrPXJO4YIykRMCQBUV+rqyjk108XnckJ6qHaOvfqM1sezH8KUJuLsyYtfpwoaSL5DIXogpRurScbN07rfcqmfNwktefPJe5frqGEc=");
+         var decode= encrypt.decrypt(encrypted);//解密
+         console.log(decode);*/
+    </script>
    </body>
    </html>
