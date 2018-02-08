@@ -1,6 +1,9 @@
 package com.dx.service.login.impl;
 
-import com.dx.service.login.pojo.User;
+import com.dx.data.mybatis.mapper.UserMapper;
+import com.dx.service.login.pojo.MyUserDetails;
+import com.dx.service.login.pojo.SysUser;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -11,17 +14,19 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class UserService implements UserDetailsService {
+    @Autowired
+    private UserMapper userMapper;
+
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        User user = new User();
-        user.setUsername("duxing");
-        user.setPassword("duxing");
-
+        System.out.println("UserDetailsService");
+        SysUser user = userMapper.getUserByLoginId(s);
+        MyUserDetails u=new MyUserDetails(user);
         if (user == null) {
             throw new UsernameNotFoundException("用户名不存在");
         }
-        System.out.println("s:"+s);
-        System.out.println("username:"+user.getUsername()+";password:"+user.getPassword());
-        return user;
+
+        return u;
     }
+
 }

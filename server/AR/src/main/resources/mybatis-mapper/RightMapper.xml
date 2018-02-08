@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dx.data.mybatis.mapper.RightMapper">
+    <resultMap id="rightResultMap"
+               type="com.dx.service.login.pojo.RightGrantedAuthority">
+        <id property="authority" column="c_rightkey"/>
+    </resultMap>
+
+    <select id="getRightsByUserId" resultMap="rightResultMap">
+        select t.c_rightkey
+        from t_aty_user_right t
+        where  t.C_UserID=#{userId}
+    </select>
+
+</mapper>

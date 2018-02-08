@@ -1,10 +1,14 @@
 package com.dx.service.login.impl;
 
-import com.dx.service.login.pojo.User;
+import com.dx.service.login.encryption.RSACoder;
+import com.dx.service.login.pojo.MyUserDetails;
+import com.dx.service.login.pojo.SysUser;
+import org.apache.tomcat.util.security.MD5Encoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
@@ -12,7 +16,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 
-/**
+/** 认证拦截器
  * Created by Administrator on 2018-1-29.
  */
 @Component
@@ -26,19 +30,30 @@ public class MyAuthenticationProvider implements AuthenticationProvider {
      */
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        System.out.print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+
         String username = authentication.getName();
         String password = (String) authentication.getCredentials();
-        User user = (User) userService.loadUserByUsername(username);
+        System.out.println("user:"+username);
+        try {
+            username= RSACoder.decryptByPrivateKey(username,RSACoder.PrivateKey);
+            password=RSACoder.decryptByPrivateKey(password,RSACoder.PrivateKey);
+        } catch (Exception e) {
+
+            //写log 日志
+           // e.printStackTrace();
+        }
+        System.out.println("password:"+password);
+        MyUserDetails user = (MyUserDetails) userService.loadUserByUsername(username);
+        Md5PasswordEncoder md5PasswordEncoder=new Md5PasswordEncoder();
+        password= md5PasswordEncoder.encodePassword(password, "salt");
         if(user == null){
             throw new BadCredentialsException("Username not found.");
         }
 
-        //加密过程在这里体现
         if (!password.equals(user.getPassword())) {
+            System.out.println("Wrong password.:"+username);
             throw new BadCredentialsException("Wrong password.");
         }
-
         Collection<? extends GrantedAuthority> authorities = user.getAuthorities();
         return new UsernamePasswordAuthenticationToken(user, password, authorities);
     }

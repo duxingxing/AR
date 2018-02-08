@@ -1,9 +1,12 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head>
     <title>Spring Security Example </title>
+    <script src="global/lib/jquery.min.js"></script>
+
+    <script src="global/lib/jsencrypt.min.js"></script>
 </head>
 <body>
 <div th:if="${param.error}">
@@ -12,10 +15,33 @@
 <div th:if="${param.logout}">
     您已注销成功
 </div>
-<form th:action="@{/login}" method="post">
-    <div><label> 用户名 : <input type="text" name="username" value="duxing"/> </label></div>
-    <div><label> 密  码 : <input type="password" name="password" value="duxing"/> </label></div>
-    <div><input type="submit" value="登录"/></div>
+<div><label> 用户名 : <input type="text" id="username1" name="username" value="duxing"/> </label></div>
+<div><label> 密  码 : <input type="password" id="password1" name="password" value="password"/> </label></div>
+<div><input type="button" id="sub" value="登录"/></div>
+<form th:action="@{/login}" method="post" id="formdata">
+    <input type="hidden" id="username" name="username" value=""/>
+    <input type="hidden" id="password" name="password" value=""/>
 </form>
+
+<script type="text/javascript">
+$(function(){
+$("#sub").click(function(){
+  var encrypt = new JSEncrypt();
+  encrypt.setPublicKey('MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDEXz1M+BbzW+O1fixqijFMTh8lTFw0IF/b+MHFjnFumzBQNDPkxYw0Hv8GQNe3KXkimZb9iXXhS7O3ds7xDU9XOs8TRHVQuAm43kda59H6JdCPFtT+bS9fXoFuddUiahbsvtw3lmcXlLo4IDEKan3nPOGnQjexdLuJLM0dTI9NswIDAQAB');
+        var encrypted = encrypt.encrypt($("#username1").val());//加密
+         var pwd = encrypt.encrypt($("#password1").val());//加密
+         $("#username").val(encrypted);
+         $("#password").val(pwd);
+
+         $("#formdata").submit();
+
+
+});
+
+
+});
+
+
+</script>
 </body>
 </html>

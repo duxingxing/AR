@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dx.data.mybatis.mapper.RoleMapper">
+    <resultMap id="roleResultMap"
+               type="com.dx.service.login.pojo.RoleGrantedAuthority">
+        <id property="authority" column="C_RoleID"/>
+    </resultMap>
+
+    <select id="getRolesByUserId" resultMap="roleResultMap">
+        select t.C_RoleID
+        from t_aty_user_right t
+        where  t.C_UserID=#{userId} and C_RoleID is not null
+    </select>
+
+</mapper>

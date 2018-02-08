@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dx.data.mybatis.mapper.UserMapper">
+    <resultMap id="userResultMap"
+               type="com.dx.service.login.pojo.SysUser">
+        <id property="id" column="c_id" />
+        <result property="loginId" column="c_loginid" />
+        <result property="name" column="c_name" />
+        <result property="password" column="c_password" />
+        <result property="email" column="c_mail" />
+        <result property="xmjp" column="c_xmjp" />
+        <result property="corpId" column="c_corp" />
+        <result property="deptId" column="c_dept" />
+        <result property="nValid" column="n_valid" />
+        <result property="order" column="n_order" />
+    </resultMap>
+
+    <update id="setUserPwd">
+        update {db.t_aty_user} set c_password=#{sPwdMd5}
+        where
+        c_id=#{userId}
+    </update>
+    <insert id="saveUserRight" parameterType="com.dx.service.login.pojo.SysUserRight">
+        insert into {db.t_aty_user_right}
+        (c_id,c_userid,n_type,c_roleid,c_rightkey)
+        values
+        (#{id},#{userId},#{type},#{roleId},#{rightKey})
+    </insert>
+    <update id="updateRightUser">
+        update {db.t_aty_user_right}
+        set c_rightkey=#{newRightKey}
+        where c_rightkey=#{oldRightKey}
+    </update>
+
+    <delete id="deleteUserRightsByRole">
+        delete from {db.t_aty_user_right}
+        where n_type=1
+        and c_userid=#{userid}
+        and
+        c_roleid in
+        <foreach item="role" index="index" collection="delRoleList"
+                 open="(" separator="," close=")">
+            #{role}
+        </foreach>
+    </delete>
+    <delete id="deleteUserRightsByRightKey">
+        delete from {db.t_aty_user_right}
+        where n_type=2
+        and c_userid=#{userid}
+        and
+        c_rightkey in
+        <foreach item="role" index="index" collection="rightKeys"
+                 open="(" separator="," close=")">
+            #{role}
+        </foreach>
+    </delete>
+    <delete id="deleteUser">
+        delete from {db.t_aty_user}
+        where c_id=#{id}
+    </delete>
+
+
+
+
+    <insert id="insertUser" parameterType="com.dx.service.login.pojo.SysUser">
+        insert into {db.t_aty_user}
+        (c_id,c_loginid,c_name,c_password,c_mail,c_xmjp,c_corp,c_dept,n_valid,n_order)
+        values
+        (#{id},#{loginId},#{name},#{password},#{email},#{xmjp},#{corpId},#{deptId},#{nValid},#{order})
+    </insert>
+
+
+    <update id="updateUser" parameterType="com.dx.service.login.pojo.SysUser">
+        update {db.t_aty_user} set
+        c_loginid=#{loginId},c_name=#{name},c_password=#{password},c_mail=#{email},c_xmjp=#{xmjp},c_corp=#{corpId},c_dept=#{deptId},n_valid=#{nValid},n_order=#{order}
+        where c_id=#{id}
+    </update>
+
+    <select id="getAllUsers" resultMap="userResultMap">
+        select * from {db.t_aty_user}
+    </select>
+    <select id="getUserList" resultMap="userResultMap">
+        select * from {db.t_aty_user}
+        limit #{start},
+        #{limit}
+    </select>
+    <delete id="deleteUserRight">
+        delete from {db.t_aty_user_right}
+        where c_userId =#{userId}
+    </delete>
+    <delete id="deleteUsersRight">
+        delete from {db.t_aty_user_right}
+        where c_userid in
+        <foreach item="id" index="index" collection="list" open="("
+                 separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <delete id="deleteUsersSomeRight">
+        delete from {db.t_aty_user_right}
+        where c_rightkey=#{rightKey} and c_userid in
+        <foreach item="id" index="index" collection="userIdList" open="("
+                 separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <delete id="deleteUserList">
+        delete from {db.t_aty_user}
+        where c_id in
+        <foreach item="id" index="index" collection="list"
+                 open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+
+    <select id="getUserById" resultMap="userResultMap">
+        select * from {db.t_aty_user}
+        where c_id=#{userId}
+    </select>
+    <select id="getUserByLoginId" resultMap="userResultMap">
+        select * from {db.t_aty_user}
+        where c_loginid=#{loginId}
+    </select>
+    <update id="updateUserListValid">
+        update {db.t_aty_user} set n_valid=#{valid}
+        where c_id in
+        <foreach item="id" index="index" collection="userIdList"
+                 open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+
+</mapper>

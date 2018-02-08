@@ -15,7 +15,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 
 /**
- * 认证filter
+ * 认证配置
  * Created by Administrator on 2018-1-29.
  */
 @Configuration
@@ -47,23 +47,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/login").permitAll()//访问：/无需登录认证权限
                 .anyRequest().authenticated() //其他所有资源都需要认证，登陆后访问
-                .antMatchers("/hello").hasAuthority("ADMIN") //登陆后之后拥有“ADMIN”权限才可以访问/hello方法，否则系统会出现“403”权限不足的提示
+
+               // .antMatchers("/hello").hasAuthority("admin") //登陆后之后拥有“ADMIN”权限才可以访问/hello方法，否则系统会出现“403”权限不足的提示
                 .and()
                 .formLogin()
                 .loginPage("/login")//指定登录页是”/login”
                 .defaultSuccessUrl("/index")
                 .failureUrl("/login?error")
-                .permitAll()
-                // .successHandler(loginSuccessHandler()) //登录成功后可使用loginSuccessHandler()存储用户信息，可选。
-                .and()
-                .logout()
-                .logoutSuccessUrl("/login") //退出登录后的默认网址是”/home”
+                .permitAll();
 
-                .permitAll()
-                .invalidateHttpSession(true)
-                .and()
-                .rememberMe()//登录后记住用户，下次自动登录,数据库中必须存在名为persistent_logins的表
-                .tokenValiditySeconds(1209600);
     }
 
 
